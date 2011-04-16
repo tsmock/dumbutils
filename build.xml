@@ -27,12 +27,12 @@
 **
 **
 -->
-<project name="myPluginName" default="dist" basedir=".">
+<project name="dumbutils" default="dist" basedir=".">
 
     <!-- enter the SVN commit message -->
-    <property name="commit.message" value="Commit message" />
+    <property name="commit.message" value="dumbutils" />
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="" />
+    <property name="plugin.main.version" value="3835" />
 
 
     <!--
@@ -77,9 +77,6 @@
     -->
     <target name="dist" depends="compile,revision">
         <echo message="creating ${ant.project.name}.jar ... "/>
-        <copy todir="${plugin.build.dir}/resources">
-            <fileset dir="resources"/>
-        </copy>
         <copy todir="${plugin.build.dir}/images">
             <fileset dir="images"/>
         </copy>
@@ -87,6 +84,8 @@
             <fileset dir=".">
                 <include name="README" />
                 <include name="LICENSE" />
+                <include name="GPL-v2.0.txt" />
+                <include name="GPL-v3.0.txt" />
             </fileset>
         </copy>
         <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
@@ -99,12 +98,12 @@
         ************************************************
     -->
             <manifest>
-                <attribute name="Author" value="..."/>
-                <attribute name="Plugin-Class" value="..."/>
+                <attribute name="Author" value="Ilya Zverev"/>
+                <attribute name="Plugin-Class" value="dumbutils.DumbUtilsPlugin"/>
                 <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-                <attribute name="Plugin-Description" value="..."/>
-                <attribute name="Plugin-Icon" value="..."/>
-                <attribute name="Plugin-Link" value="..."/>
+                <attribute name="Plugin-Description" value="Some actions which you were never supposed to see."/>
+                <attribute name="ru_Plugin-Description" value="Несколько инструментов, которые секретны и не устанавливайте этот плагин."/>
+                <attribute name="Plugin-Icon" value="images/dumbutils.png"/>
                 <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
                 <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
             </manifest>
@@ -253,5 +252,10 @@
     </target>
 
     <target name="publish" depends="ensure-svn-present,core-info,commit-current,update-current,clean,dist,commit-dist">
+    </target>
+    <target name="runjosm" depends="install">
+        <java jar="${josm}" fork="true">
+            <arg line="../../core/data_nodist/neubrandenburg.osm"/>
+        </java>
     </target>
 </project>
